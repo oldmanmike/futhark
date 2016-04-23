@@ -31,12 +31,12 @@ install:
  - stack --no-terminal test --only-dependencies
 
 script:
- - echo "travis_fold:start:SCRIPT Build Futhark compiler"
+ - echo "travis_fold:start:build"
  - stack --no-terminal test --haddock --no-haddock-deps
- - echo "travis_fold:end:SCRIPT Built Futhark compiler"
- - echo "travis_fold:start:SCRIPT Installing Futhark compiler"
+ - echo "travis_fold:end:build"
+ - echo "travis_fold:start:install"
  - stack install
- - echo "travis_fold:end:SCRIPT Installed Futhark compiler"
+ - echo "travis_fold:end:install"
 
 # Now for integration testing
  - data/runtests.sh # Run integration test suite.
