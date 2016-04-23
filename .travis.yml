@@ -3,9 +3,11 @@ language: haskell
 sudo: false
 
 # We test against different Stackage snapshots.
-env:
- - STACK_YAML=stack.yaml
- - STACK_YAML=stack-lts-1.15.yaml
+matrix:
+  include:
+    - env: BUILD=stack STACK_YAML=stack.yaml
+
+    - env: BUILD=stack STACK_YAML=stack-lts-1.15.yaml
 
 addons:
   apt:
