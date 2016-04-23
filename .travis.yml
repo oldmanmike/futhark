@@ -21,9 +21,7 @@ before_install:
  - ./.travis-setup.sh
 
 install:
- - stack --no-terminal test --only-dependencies
- - stack setup --stack-yaml $STACK_YAML
- - stack build --stack-yaml $STACK_YAML --only-dependencies --fast
+ - stack --no-terminal test --only-dependencies --fast
 
 script:
  - stack --no-terminal test --haddock --no-haddock-deps --fast
