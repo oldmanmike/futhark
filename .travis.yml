@@ -19,6 +19,7 @@ addons:
 before_install:
  - export PATH=$HOME/.local/bin:$PATH
  - ./.travis-setup.sh
+ - stack install hlint --stack-yaml $STACK_YAML --fast
 
 install:
  - stack --no-terminal test --only-dependencies --fast
