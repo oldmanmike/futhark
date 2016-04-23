@@ -21,11 +21,11 @@ before_install:
  - stack install hlint --fast
 
 install:
- - stack --no-terminal test --only-dependencies --fast
+ - stack --no-terminal test --only-dependencies
 
 script:
  - echo "travis_fold:start:SCRIPT Build Futhark compiler"
- - stack --no-terminal test --haddock --no-haddock-deps --fast
+ - stack --no-terminal test --haddock --no-haddock-deps
  - echo "travis_fold:end:SCRIPT Built Futhark compiler"
  - echo "travis_fold:start:SCRIPT Installing Futhark compiler"
  - stack install
