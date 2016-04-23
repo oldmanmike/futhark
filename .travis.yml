@@ -18,13 +18,13 @@ matrix:
 addons:
   apt:
     packages:
+    - hlint
     - python
     - python-numpy
 
 before_install:
  - export PATH=$HOME/.local/bin:$PATH
  - ./.travis-setup.sh
- - stack install hlint --fast
 
 install:
  - stack --no-terminal test --only-dependencies
@@ -46,6 +46,9 @@ script:
  - git clone https://github.com/HIPERFIT/futhark-benchmarks.git
  - (cd futhark-benchmarks && futhark-test --travis $(find . -name '*.fut') && futhark-test --travis -t --compiler=futhark-pyopencl $(find . -name '*.fut'))
 
- - if [ "$STACK_YAML" = stack.yaml ]; then tools/style-check.sh src; fi # Check for style issues.
+ # Check for style issues.
+ - if [ "$STACK_YAML" = stack.yaml ]; then
+     stack install hlint --fast && tools/style-check.sh src;
+   fi
 
 # EOF
