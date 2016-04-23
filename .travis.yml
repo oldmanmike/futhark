@@ -12,7 +12,6 @@ matrix:
 addons:
   apt:
     packages:
-    - hlint
     - python
     - python-numpy
 
@@ -37,7 +36,7 @@ script:
  - git clone https://github.com/HIPERFIT/futhark-benchmarks.git
  - (cd futhark-benchmarks && futhark-test --travis $(find . -name '*.fut') && futhark-test --travis -t --compiler=futhark-pyopencl $(find . -name '*.fut'))
 
- - tools/style-check.sh src # Check for style issues.
+ - if [ "$STACK_YAML" = stack.yaml ]; then tools/style-check.sh src; fi # Check for style issues.
 
 cache:
   directories:
