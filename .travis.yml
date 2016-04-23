@@ -39,7 +39,6 @@ script:
  - (cd futhark-benchmarks && futhark-test --travis $(find . -name '*.fut') && futhark-test --travis -t --compiler=futhark-pyopencl $(find . -name '*.fut'))
 
  - tools/style-check.sh src # Check for style issues.
- - stack haddock # Can we build the documentation?
 
 cache:
   directories:
