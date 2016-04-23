@@ -23,10 +23,10 @@ before_install:
 install:
  - stack --no-terminal test --only-dependencies
  - stack setup --stack-yaml $STACK_YAML
- - stack build --stack-yaml $STACK_YAML --only-dependencies
+ - stack build --stack-yaml $STACK_YAML --only-dependencies --fast
 
 script:
- - stack --no-terminal test --haddock --no-haddock-deps
+ - stack --no-terminal test --haddock --no-haddock-deps --fast
  - stack install --stack-yaml $STACK_YAML
 
 # Now for integration testing
