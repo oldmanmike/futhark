@@ -19,14 +19,14 @@ addons:
 before_install:
  - export PATH=$HOME/.local/bin:$PATH
  - ./.travis-setup.sh
- - stack install hlint --stack-yaml $STACK_YAML --fast
+ - stack install hlint --fast
 
 install:
  - stack --no-terminal test --only-dependencies --fast
 
 script:
  - stack --no-terminal test --haddock --no-haddock-deps --fast
- - stack install --stack-yaml $STACK_YAML
+ - stack install
 
 # Now for integration testing
  - data/runtests.sh # Run integration test suite.
