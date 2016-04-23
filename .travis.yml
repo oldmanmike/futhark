@@ -27,6 +27,7 @@ before_install:
  - ./.travis-setup.sh
 
 install:
+ - stack build alex happy
  - stack --no-terminal test --only-dependencies
 
 script:
