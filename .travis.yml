@@ -14,17 +14,20 @@ addons:
     - python
     - python-numpy
 
+before_install:
+ - export PATH=$HOME/.local/bin:$PATH
+ - ./.travis-setup.sh
+
 install:
+ - stack --no-terminal test --only-dependencies
  - stack setup --stack-yaml $STACK_YAML
  - stack build --stack-yaml $STACK_YAML --only-dependencies
 
 script:
- - stack build --stack-yaml $STACK_YAML
- - stack test --stack-yaml $STACK_YAML
+ - stack --no-terminal test --haddock --no-haddock-deps
  - stack install --stack-yaml $STACK_YAML
 
- - cabal check
-
+# Now for integration testing
  - data/runtests.sh # Run integration test suite.
  - data/runtests.sh --compiler=futhark-py --exclude=no_python -c # Run integration test suite with Python code generator.
  - data/runtests.sh -t --exclude=no_opencl --compiler=futhark-pyopencl # Also test OpenCL code generation
