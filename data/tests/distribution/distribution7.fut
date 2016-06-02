@@ -2,7 +2,7 @@
 -- distributed.
 --
 -- ==
--- structure distributed { Kernel 2 }
+-- structure distributed { If/True/Kernel 1 If/False/Kernel 2 }
 
 fun []int main([][n]int a) =
   map(fn int ([]int a_row) =>

@@ -13,7 +13,7 @@
 --   loop
 -- ==
 --
--- structure distributed { Kernel 1 DoLoop 1 }
+-- structure distributed { Kernel 2 DoLoop 2 }
 
 fun []int main([][]int a) =
   map(fn int ([]int a_r) =>

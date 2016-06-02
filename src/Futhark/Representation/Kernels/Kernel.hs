@@ -73,6 +73,7 @@ data Kernel lore =
     -- See SOAC.hs for what the different WriteKernel arguments mean.
   | NumGroups
   | GroupSize
+  | SufficientParallelism SubExp -- ^ True if enough parallelism.
 
   | Kernel Certificates
     (SubExp,SubExp,SubExp) -- #workgroups, group size, #threads
@@ -169,6 +170,8 @@ mapKernelM tv (WriteKernel cs len lam ivs as) =
   mapM (\(aw,a) -> (,) <$> mapOnKernelSubExp tv aw <*> mapOnKernelVName tv a) as
 mapKernelM _ NumGroups = pure NumGroups
 mapKernelM _ GroupSize = pure GroupSize
+mapKernelM tv (SufficientParallelism se) =
+  SufficientParallelism <$> mapOnKernelSubExp tv se
 mapKernelM tv (Kernel cs (num_groups, group_size, num_threads) ts thread_id kernel_body) =
   Kernel <$> mapOnKernelCertificates tv cs <*>
   (do num_groups' <- mapOnKernelSubExp tv num_groups
@@ -380,6 +383,8 @@ kernelType NumGroups =
   [Prim int32]
 kernelType GroupSize =
   [Prim int32]
+kernelType SufficientParallelism{} =
+  [Prim Bool]
 
 chunkedKernelNonconcatOutputs :: Lambda lore -> Int
 chunkedKernelNonconcatOutputs fun =
@@ -493,6 +498,7 @@ instance (Attributes lore, Aliased lore, UsageInOp (Op lore)) => UsageInOp (Kern
     mconcat $ map UT.consumedUsage $ HS.toList $ consumedInKernelBody kbody
   usageInOp NumGroups = mempty
   usageInOp GroupSize = mempty
+  usageInOp SufficientParallelism{} = mempty
 
 consumedInKernelBody :: (Attributes lore, Aliased lore) =>
                         KernelBody lore -> Names
@@ -606,6 +612,7 @@ typeCheckKernel (WriteKernel cs w lam _ivs as) = do
 
 typeCheckKernel NumGroups = return ()
 typeCheckKernel GroupSize = return ()
+typeCheckKernel SufficientParallelism{} = return ()
 
 typeCheckKernel (Kernel cs (groups, group_size, num_threads) ts thread_id (KernelBody stms res)) = do
   mapM_ (TC.requireI [Prim Cert]) cs
@@ -710,6 +717,7 @@ instance OpMetrics (Op lore) => OpMetrics (Kernel lore) where
             inside "GroupReduce" $ lambdaMetrics lam
   opMetrics NumGroups = seen "NumGroups"
   opMetrics GroupSize = seen "GroupSize"
+  opMetrics SufficientParallelism{} = seen "SufficientParallelism"
 
 instance PrettyLore lore => PP.Pretty (Kernel lore) where
   ppr (ScanKernel cs w kernel_size fun foldfun nes arrs) =
@@ -727,6 +735,7 @@ instance PrettyLore lore => PP.Pretty (Kernel lore) where
             ppr lam)
   ppr NumGroups = text "$num_groups()"
   ppr GroupSize = text "$group_size()"
+  ppr (SufficientParallelism se) = text "$sufficientParallelism" <> parens (ppr se)
 
   ppr (Kernel cs (num_groups,group_size,num_threads) ts thread_id body) =
     ppCertificates' cs <>

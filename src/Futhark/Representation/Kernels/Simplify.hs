@@ -80,6 +80,7 @@ instance (Attributes lore, Engine.SimplifiableOp lore (Op lore)) =>
 
   simplifyOp NumGroups = return NumGroups
   simplifyOp GroupSize = return GroupSize
+  simplifyOp (SufficientParallelism se) = SufficientParallelism <$> Engine.simplify se
 
 simplifyKernelBody :: Engine.MonadEngine m =>
                       Scope (Lore m)
